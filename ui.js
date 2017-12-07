@@ -80,7 +80,7 @@ function onRobotConnection(connected) {
             connect.disabled = false;
             connect.firstChild.data = 'Connect';
             // Add the default address and select xxxx
-            address.value = 'roborio-xxxx-FRC.local';
+            address.value = 'roborio-2706-FRC.local';
             address.focus();
             address.setSelectionRange(8, 12);
             // On click try to connect and disable the input and the button
@@ -106,7 +106,7 @@ let updateGyro = (key, value) => {
     ui.gyro.arm.style.transform = `rotate(${ui.gyro.visualVal}deg)`;
     ui.gyro.number.innerHTML = ui.gyro.visualVal + 'º';
 };
-NetworkTables.addKeyListener('/SmartDashboard/drive/navx/yaw', updateGyro);
+NetworkTables.addKeyListener('/SmartDashboard/Gyro', updateGyro);
 
 // The following case is an example, for a robot with an arm at the front.
 // Info on the actual robot that this works with can be seen at thebluealliance.com/team/1418/2016.
@@ -159,7 +159,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
                 clearTimeout(countdown);
                 return;
             }
-            else if (s <= 110) {
+            else if (s <= 15) {
                 // Flash timer if less than 15 seconds left
                 //ui.timer.style.color = (s % 2 === 0) ? '#FF3030' : 'purple';
                 ui.timer.style.animationPlayState = "running";
@@ -173,8 +173,8 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
     }
     else {
         s = 135;
+        NetworkTables.putValue(key, false)
     }
-    NetworkTables.putValue(key, false);
 });
 
 // Load list of prewritten autonomous modes
