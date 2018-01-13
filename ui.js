@@ -135,18 +135,19 @@ NetworkTables.addKeyListener('/SmartDashboard/example_variable', (key, value) =>
     ui.example.readout.data = 'Value is ' + (value ? 'true' : 'false');
 });
 
+var GTimer;
 NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
     // Sometimes, NetworkTables will pass booleans as strings. This corrects for that.
     if (typeof value === 'string')
-        value = value === 'true';
+        value = (value === 'true');
     // When this NetworkTables variable is true, the timer will start.
     // You shouldn't need to touch this code, but it's documented anyway in case you do.
     var s = 135;
     if (value) {
-        // Make sure timer is reset to black when it starts
+        // Make sure timer is reset to purple when it starts
         ui.timer.style.color = 'purple';
         // Function below adjusts time left every second
-        var countdown = setInterval(function () {
+        GTimer = setInterval(function () {
             s--; // Subtract one second
             // Minutes (m) is equal to the total seconds divided by sixty with the decimal removed.
             var m = Math.floor(s / 60);
@@ -155,8 +156,9 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
             // Add leading zero if seconds is one digit long, for proper time formatting.
             visualS = visualS < 10 ? '0' + visualS : visualS;
             if (s < 0) {
-                // Stop countdown when timer reaches zero
-                clearTimeout(countdown);
+                // Stop GTimer when timer reaches zero
+                clearTimeout(GTimer);
+                GTimer = null;
                 return;
             }
             else if (s <= 15) {
@@ -173,6 +175,12 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
     }
     else {
         s = 135;
+        var m = Math.floor(s / 60), visualS = s % 60;
+        if (GTimer != null) {
+            clearTimeout(GTimer);
+            GTimer = null;
+            ui.timer.firstChild.data = m + ":" + visualS;
+        }
         NetworkTables.putValue(key, false)
     }
 });
