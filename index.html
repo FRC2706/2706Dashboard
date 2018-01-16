@@ -9,7 +9,12 @@
 
 <body>
     <!-- Clock that shows up in top left -->
-    <div id="timer">2:15</div>
+    <div id="timer">
+        2:15
+    </div>
+
+    <div id="timer_subtitle">PRE GAME</div>
+
     <header>
         <!-- Tells whether robot is connected to dashboard. -->
         <div id="robot-state">Unknown state</div>
@@ -34,7 +39,7 @@
             <text id="gyro-number" x="90" y="115">0º</text>
         </svg>
         <!-- Example robot diagram, arm moves when encoder value changes -->
-        <svg id="robot-diagram" width="332" height="450">
+        <!--<svg id="robot-diagram" width="332" height="450">
             <text x="40" y="340">Example SVG Robot Diagram</text>
             <rect x="75" y="360" width="230" height="40"></rect>
             <rect x="85" y="370" width="210" height="40"></rect>
@@ -43,7 +48,35 @@
             <circle cx="260" cy="410" r="25"></circle>
             <rect x="60" y="380" width="250" height="30"></rect>
             <text id="team" x="185" y="405" text-anchor="middle">####</text>
-        </svg>
+        </svg>-->
+
+        <div layout= "column" flex = "grow">
+        <p>
+          <!-- Diagram of the autonomous modes with buttons for selection -->
+          <svg id="autonomous-diagram" width = "400" height = "450">
+              <!-- Scale diagram -->
+              <rect id = "l_scale" x="100" y="250" height="50" width="100"></rect>
+              <line x1 = "200" x2="215" y1="275" y2="275"></line>
+              <rect x="215" y="250" height = "50" width="20"></rect>
+              <line x1= "235" x2="250" y1="275" y2="275"></line>
+              <rect id = "r_scale" x="250" y="250" height = "50" width = "100"></rect>
+
+              <!-- Switch Diagram -->
+              <rect x="125" y="350" height= "50" width="150"></rect>
+
+              <!-- Exchange Diagram -->
+              <rect x="175" y="425" height = "25" width = "25"></rect>
+          </svg>
+
+          <div id = "auto_buttons" layout = "row" layout-align= "margin-bottom">
+            <button id = "exchange_select" onclick="autonomousSelected(this.id);">Exchange</button >
+            <button id = "scale_select" onclick="autonomousSelected(this.id);">Scale</button>
+            <button id = "switch_select" onclick="autonomousSelected(this.id);">Switch</button>
+            <button id = "drive_select" onclick="autonomousSelected(this.id);">Just Drive</button>
+          </div>
+        </p>
+      </div>
+
     </article>
     <!-- The sidebar of the dashboard. Designed for smaller control elements like selection boxes and small buttons. -->
     <aside>

@@ -142,7 +142,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
         value = (value === 'true');
     // When this NetworkTables variable is true, the timer will start.
     // You shouldn't need to touch this code, but it's documented anyway in case you do.
-    var s = 135;
+    var s = 135, timer_label = document.getElementById("timer_subtitle");
     if (value) {
         // Make sure timer is reset to purple when it starts
         ui.timer.style.color = 'purple';
@@ -158,6 +158,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
             if (s < 0) {
                 // Stop GTimer when timer reaches zero
                 clearTimeout(GTimer);
+                timer_label.innerHTML = "POST GAME";
                 GTimer = null;
                 return;
             }
@@ -171,6 +172,19 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
                 ui.timer.style.color = '#FF3030';
             }
             ui.timer.firstChild.data = m + ':' + visualS;
+
+            // Autonomous period
+            if (s >= 120) {
+                timer_label.innerHTML = "AUTONOMOUS";
+            }
+            // Teleop
+            else if (s > 30) {
+                timer_label.innerHTML = "TELEOP";
+            }
+            // Climb period
+            else {
+                timer_label.innerHTML = "CLIMB";
+            }
         }, 1000);
     }
     else {
@@ -180,6 +194,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
             clearTimeout(GTimer);
             GTimer = null;
             ui.timer.firstChild.data = m + ":" + visualS;
+            timer_label.innerHTML = "NO PERIOD";
         }
         NetworkTables.putValue(key, false)
     }
@@ -316,3 +331,58 @@ ui.autoSelect.onchange = function () {
 ui.armPosition.oninput = function () {
     NetworkTables.putValue('/SmartDashboard/arm/encoder', parseInt(this.value));
 };
+
+// Set some of the autonomous mode ids
+var exchangeId = 0, driveId = 1, scaleId = 2, switchId = 3;
+var takenPriorities = [], buttons = {};
+
+function autonomousSelected(autoModeKey) {
+  var element = document.getElementById(autoModeKey);
+
+  // If the key doesn't exist in the buttons dictionary, add it with no priority.
+  if (!(autoModeKey in buttons)) {
+    buttons[autoModeKey] = 0;
+  }
+
+  var priority = buttons[autoModeKey];
+  var newPriority = priority;
+
+  do {
+    // If the priority gets all the way to 3 and no new priority is found, reset back to 1.
+    if (newPriority === 3) {
+      newPriority = 0;
+      removeFromTakenPriorities(priority);
+      break;
+    }
+    // Increase the priority level until we find one that's not taken
+    newPriority++;
+
+    //var notInNewPriorities = (takenPriorities.findIndex(function(input) { return newPriority === input }) == -1)
+    var notInNewPriorities = takenPriorities.indexOf(newPriority) === -1;
+
+    if (notInNewPriorities) {
+      removeFromTakenPriorities(priority);
+      takenPriorities.push(newPriority);
+      buttons[autoModeKey] = newPriority;
+      break;
+    }
+  }
+  while(newPriority != 0);
+
+  buttons[autoModeKey] = newPriority;
+
+  var currentButtonText = element.innerHTML;
+
+  // Select from the second index onwards, to avoid number
+  if (priority != 0) currentButtonText = currentButtonText.substring(2);
+
+  // Put no number if the new priority is 0.
+  if (newPriority != 0) currentButtonText = newPriority + ". " + currentButtonText;
+
+  element.innerHTML = currentButtonText;
+}
+
+function removeFromTakenPriorities(elementToRemove) {
+        var indexOfOldPriority = takenPriorities.indexOf(elementToRemove);
+        if (indexOfOldPriority > -1) takenPriorities.splice(indexOfOldPriority, 1);
+}
