@@ -40,8 +40,17 @@
         if (dragSrcEl != this) {
             // Set the source column's HTML to the HTML of the column we dropped on.
             dragSrcEl.innerHTML = this.innerHTML;
+
+            // Set the ids.
+            oldId = dragSrcEl.id;
+            dragSrcEl.id = this.id;
+            this.id = oldId;
+
+
             this.innerHTML = e.dataTransfer.getData('text/html');
         }
+
+        getTopAutoModes();
 
         return false;
     }

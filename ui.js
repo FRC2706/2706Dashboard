@@ -221,6 +221,38 @@ NetworkTables.addKeyListener('/SmartDashboard/autonomous/selected', (key, value)
     ui.autoSelect.value = value;
 });
 
+NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes'), (stringDictionary) => {
+    var autoModes = JSON.parse(stringDictionary);
+
+    var autoModesListItems = "<ol>";
+    for (var autoModeKey in autoModes) {
+        autoModes += "<li id = " + autoModeKey + ">" + autoModes[autoModeKey] + "</li>";
+    }
+
+    autoModesListItems += "</ol>";
+}
+
+function sendAutoModes() {
+    var jsonObject = getTopAutoModes();
+
+    NetworkTables.putValue("/SmartDashboard/autonomous/selected_modes", jsonObject);
+}
+
+function getTopAutoModes() {
+    var autonomousList = document.getElementById("autoselector");
+    var elementChildren = autonomousList.children;
+    var topThreeAutoModes = [];
+
+    if (elementChildren.length == 0) return;
+    topThreeAutoModes[0] = elementChildren[0].id;
+    if (elementChildren.length > 1) topThreeAutoModes[1] = elementChildren[1].id;
+    if (elementChildren.length > 2) topThreeAutoModes[2] = elementChildren[2].id;
+
+    return JSON.stringify(topThreeAutoModes);
+}
+
+
+
 // Global Listener
 function onValueChanged(key, value, isNew) {
     // Sometimes, NetworkTables will pass booleans as strings. This corrects for that.
