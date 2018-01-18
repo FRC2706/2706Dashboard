@@ -170,6 +170,10 @@ text {
   right : 10vw;
 }
 
+#autonomous_list {
+  margin-left: 10px;
+}
+
 #robot-arm {
     -webkit-transform-origin: right;
     -ms-transform-origin: right;
