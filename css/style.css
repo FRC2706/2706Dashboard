@@ -224,21 +224,7 @@ body.login-close #login {
 #connect{
     text-align: center;
 }
-/*
- Blur transition that does not work
 
-body:not(.login-close) >:not(.greybox) {
-    animation: blur 1s normal forwards
+.over {
+	color:#800080;
 }
-body.login-close >:not(.greybox) {
-    animation: blur 1s reverse backwards
-}
-@keyframes blur {
-    from {
-        filter: blur(0);
-    }
-    to {
-        filter: blur(3px);
-    }
-}
-*/
