@@ -26,6 +26,7 @@ let ui = {
         get: document.getElementById('get')
     },
     autoSelect: document.getElementById('auto-select'),
+    autoSelectList: document.getElementById("autoselector"),
     armPosition: document.getElementById('arm-position')
 };
 let address = document.getElementById('connect-address'),
@@ -196,12 +197,11 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
             ui.timer.firstChild.data = m + ":" + visualS;
             timer_label.innerHTML = "NO PERIOD";
         }
-        NetworkTables.putValue(key, false)
     }
 });
 
 // Load list of prewritten autonomous modes
-NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
+NetworkTables.addKeyListener('/SmartDashboard/autonomous/modes', (key, value) => {
     // Clear previous list
     while (ui.autoSelect.firstChild) {
         ui.autoSelect.removeChild(ui.autoSelect.firstChild);
@@ -221,29 +221,33 @@ NetworkTables.addKeyListener('/SmartDashboard/autonomous/selected', (key, value)
     ui.autoSelect.value = value;
 });
 
-NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes'), (stringDictionary) => {
+// Listen and respond to posted autonomous modes
+NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes', (key, stringDictionary) => {
     var autoModes = JSON.parse(stringDictionary);
 
-    var autoModesListItems = "<ol>";
+    var autoModesListItems = "";
     for (var autoModeKey in autoModes) {
-        autoModes += "<li id = " + autoModeKey + ">" + autoModes[autoModeKey] + "</li>";
+        autoModesListItems += "<li id = \"" + autoModeKey + "\" draggable = \"true\" class = \"automode\">" + autoModes[autoModeKey] + "</li>";
     }
 
-    autoModesListItems += "</ol>";
-}
+    ui.autoSelectList.innerHTML = autoModesListItems;
 
+    refreshAutoDragAndDrop();
+});
+
+var selectedAutoModesKey = "/SmartDashboard/autonomous/selected_modes";
 function sendAutoModes() {
     var jsonObject = getTopAutoModes();
+    if (jsonObject == null) return;
 
-    NetworkTables.putValue("/SmartDashboard/autonomous/selected_modes", jsonObject);
+    NetworkTables.putValue(selectedAutoModesKey, jsonObject);
 }
 
 function getTopAutoModes() {
-    var autonomousList = document.getElementById("autoselector");
-    var elementChildren = autonomousList.children;
+    var elementChildren = ui.autoSelectList.children;
     var topThreeAutoModes = [];
 
-    if (elementChildren.length == 0) return;
+    if (elementChildren.length == 0) return null;
     topThreeAutoModes[0] = elementChildren[0].id;
     if (elementChildren.length > 1) topThreeAutoModes[1] = elementChildren[1].id;
     if (elementChildren.length > 2) topThreeAutoModes[2] = elementChildren[2].id;

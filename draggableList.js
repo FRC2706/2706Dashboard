@@ -50,7 +50,7 @@
             this.innerHTML = e.dataTransfer.getData('text/html');
         }
 
-        getTopAutoModes();
+        sendAutoModes();
 
         return false;
     }
@@ -62,6 +62,18 @@
             col.classList.remove('over');
         });
         this.style.opacity = '1';
+    }
+
+    function refreshAutoDragAndDrop() {
+        cols = document.querySelectorAll('#autoselector .automode');
+        [].forEach.call(cols, function (col) {
+            col.addEventListener('dragstart', handleDragStart, false);
+            col.addEventListener('dragenter', handleDragEnter, false)
+            col.addEventListener('dragover', handleDragOver, false);
+            col.addEventListener('dragleave', handleDragLeave, false);
+            col.addEventListener('drop', handleDrop, false);
+            col.addEventListener('dragend', handleDragEnd, false);
+        });
     }
 
     var cols = document.querySelectorAll('#autoselector .automode');
