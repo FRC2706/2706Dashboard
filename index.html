@@ -38,17 +38,6 @@
             <rect id="gyro-arm" x="80" y="5" width="10" height="80"></rect>
             <text id="gyro-number" x="90" y="115">0º</text>
         </svg>
-        <!-- Example robot diagram, arm moves when encoder value changes -->
-        <!--<svg id="robot-diagram" width="332" height="450">
-            <text x="40" y="340">Example SVG Robot Diagram</text>
-            <rect x="75" y="360" width="230" height="40"></rect>
-            <rect x="85" y="370" width="210" height="40"></rect>
-            <rect id="robot-arm" x="5" y="375" width="80" height="10"></rect>
-            <circle cx="100" cy="410" r="25"></circle>
-            <circle cx="260" cy="410" r="25"></circle>
-            <rect x="60" y="380" width="250" height="30"></rect>
-            <text id="team" x="185" y="405" text-anchor="middle">####</text>
-        </svg>-->
 
         <div layout= "column" flex = "grow">
         <p>
@@ -73,35 +62,18 @@
     </article>
     <!-- The sidebar of the dashboard. Designed for smaller control elements like selection boxes and small buttons. -->
     <aside>
-        <!-- Example button which toggles /SmartDashboard/exampleValue NetworkTables value.
-            The <p> below then says the value. -->
-        <div id="example-section">
-            <button id="example-button">Change example value</button>
-            <p id="example-readout">Value is undefined</p>
-        </div>
-        <!-- Autonomous selector -->
-        <div class="select-container">
-            <select id="auto-select">
-                <option>No auto modes found</option>
-                <!-- This gets populated by JS -->
-            </select>
-        </div>
-        <div>
-            <p>Adjust arm height</p>
-            <input id="arm-position" type="range" min="0" max="1200" value="770">
-        </div>
-	<ol id="autoselector" style="margin-left:8px;">
-		<li draggable="true" id = "1" class="automode">Auto Mode 1</li>
-		<li draggable="true" id = "2" class="automode">Auto Mode 2</li>
-		<li draggable="true" id = "3" class="automode">Auto Mode 3</li>
-		<li draggable="true" id = "4" class="automode">Auto Mode 4</li>
-		<li draggable="true" id = "hotel" class="automode">Auto Mode "Drive into hotel wall"</li>
-	</ol>
+	    <ol id="autoselector" style="margin-left:8px;">
+		    <li draggable="true" id = "1" class="automode">Auto Mode 1</li>
+		    <li draggable="true" id = "2" class="automode">Auto Mode 2</li>
+		    <li draggable="true" id = "3" class="automode">Auto Mode 3</li>
+		    <li draggable="true" id = "4" class="automode">Auto Mode 4</li>
+		    <li draggable="true" id = "hotel_wall_get_rekt" class="automode">Drive into hotel wall.</li>
+	    </ol>
     </aside>
     <div class="greybox">
         <div id="login">
             <input id="connect-address" type="text" value="localhost" disabled>
-            <button id="connect" disabled>Connecting</button>
+            <button id="connectButton" disabled>Connecting</button>
         </div>
     </div>
     <script src="tryIPC.js"></script>

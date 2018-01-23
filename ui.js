@@ -13,10 +13,6 @@ let ui = {
     robotDiagram: {
         arm: document.getElementById('robot-arm')
     },
-    example: {
-        button: document.getElementById('example-button'),
-        readout: document.getElementById('example-readout').firstChild
-    },
     tuning: {
         list: document.getElementById('tuning'),
         button: document.getElementById('tuning-button'),
@@ -25,12 +21,10 @@ let ui = {
         set: document.getElementById('set'),
         get: document.getElementById('get')
     },
-    autoSelect: document.getElementById('auto-select'),
     autoSelectList: document.getElementById("autoselector"),
-    armPosition: document.getElementById('arm-position')
 };
 let address = document.getElementById('connect-address'),
-    connect = document.getElementById('connect');
+    connect = document.getElementById('connectButton');
 
 // Sets function to be called on NetworkTables connect. Commented out because it's usually not necessary.
 // NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
@@ -125,17 +119,6 @@ NetworkTables.addKeyListener('/SmartDashboard/arm/encoder', (key, value) => {
     ui.robotDiagram.arm.style.transform = `rotate(${armAngle}deg)`;
 });
 
-// This button is just an example of triggering an event on the robot by clicking a button.
-NetworkTables.addKeyListener('/SmartDashboard/example_variable', (key, value) => {
-    // Sometimes, NetworkTables will pass booleans as strings. This corrects for that.
-    // TODO: We shouldn't have to do this for every variable that can be a boolean.
-    if (typeof value === 'string')
-        value = value === 'true';
-    // Set class active if value is true and unset it if it is false
-    ui.example.button.classList.toggle('active', value);
-    ui.example.readout.data = 'Value is ' + (value ? 'true' : 'false');
-});
-
 var GTimer;
 NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
     // Sometimes, NetworkTables will pass booleans as strings. This corrects for that.
@@ -198,27 +181,6 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
             timer_label.innerHTML = "NO PERIOD";
         }
     }
-});
-
-// Load list of prewritten autonomous modes
-NetworkTables.addKeyListener('/SmartDashboard/autonomous/modes', (key, value) => {
-    // Clear previous list
-    while (ui.autoSelect.firstChild) {
-        ui.autoSelect.removeChild(ui.autoSelect.firstChild);
-    }
-    // Make an option for each autonomous mode and put it in the selector
-    for (let i = 0; i < value.length; i++) {
-        var option = document.createElement('option');
-        option.appendChild(document.createTextNode(value[i]));
-        ui.autoSelect.appendChild(option);
-    }
-    // Set value to the already-selected mode. If there is none, nothing will happen.
-    ui.autoSelect.value = NetworkTables.getValue('/SmartDashboard/currentlySelectedMode');
-});
-
-// Load list of prewritten autonomous modes
-NetworkTables.addKeyListener('/SmartDashboard/autonomous/selected', (key, value) => {
-    ui.autoSelect.value = value;
 });
 
 // Listen and respond to posted autonomous modes
@@ -328,11 +290,6 @@ function onValueChanged(key, value, isNew) {
     }
 }
 
-// The rest of the doc is listeners for UI elements being clicked on
-ui.example.button.onclick = function () {
-    // Set NetworkTables values to the opposite of whether button has active class.
-    NetworkTables.putValue('/SmartDashboard/example_variable', this.className != 'active');
-};
 // Reset gyro value to 0 on click
 ui.gyro.container.onclick = function () {
     // Store previous gyro val, will now be subtracted from val for callibration
@@ -358,14 +315,6 @@ ui.tuning.set.onclick = function () {
 };
 ui.tuning.get.onclick = function () {
     ui.tuning.value.value = NetworkTables.getValue(ui.tuning.name.value);
-};
-// Update NetworkTables when autonomous selector is changed
-ui.autoSelect.onchange = function () {
-    NetworkTables.putValue('/SmartDashboard/autonomous/selected', this.value);
-};
-// Get value of arm height slider when it's adjusted
-ui.armPosition.oninput = function () {
-    NetworkTables.putValue('/SmartDashboard/arm/encoder', parseInt(this.value));
 };
 
 // Set some of the autonomous mode ids
