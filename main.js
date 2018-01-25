@@ -55,7 +55,12 @@ function createWindow() {
     });
     // Listens to the changes coming from the client
     client.addListener((key, val, valType, mesgType, id, flags) => {
-        mainWindow.webContents.send(mesgType, { key, val, valType, id, flags });
+        try {
+            mainWindow.webContents.send(mesgType, { key, val, valType, id, flags });
+        }
+        catch (TypeError) {
+
+        }
     });
     // Create the browser window.
     mainWindow = new BrowserWindow({
