@@ -84,6 +84,9 @@ body > * {
     }
 }
 
+#robot-state {
+    color: red;
+}
 
 
 header {
@@ -192,38 +195,35 @@ aside {
 aside > * {
     margin-bottom: 20px;
 }
-.greybox {
-    position: fixed;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.3);
-}
-body.login-close > .greybox {
-    display: none
-}
 #login {
     text-align: center;
     display: block;
-    margin: 14em auto 0 auto;
-    width: 18em;
+    margin: 0em auto 0 auto;
+    width: 10em;
     overflow: hidden;
     animation: 1s linear;
-    padding: 4px;
-    border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.8)
+    padding: 2px;
+    border-radius: 4px;
+    background-color: rebeccapurple;
 }
+
+#login > input {
+    width: auto;
+    font-size: 10px;
+}
+
 body.login-close #login {
     opacity: 1;
     width: 0;
     animation: 1s linear;
+    display: none;
 }
+
 #login :disabled {
     filter: opacity(0.6)
 }
 #login > button{
-    width:6em
+    width:auto;
 }
 #connect{
     text-align: center;

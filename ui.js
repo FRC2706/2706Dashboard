@@ -2,6 +2,7 @@
 let ui = {
     timer: document.getElementById('timer'),
     robotState: document.getElementById('robot-state').firstChild,
+    robotStateBox: document.getElementById('robot-state'),
     gyro: {
         container: document.getElementById('gyro'),
         val: 0,
@@ -52,10 +53,14 @@ if (noElectron) {
     document.body.classList.add('login-close');
 }
 
+const CONNECTED_TEXT = "CONNECTED";
+const DISCONNECTED_TEXT = "DISCONNECTED";
 function onRobotConnection(connected) {
-    var state = connected ? 'Robot connected!' : 'Robot disconnected.';
+    var state = connected ? CONNECTED_TEXT : DISCONNECTED_TEXT;
     console.log(state);
     ui.robotState.data = state;
+    if (state === CONNECTED_TEXT) ui.robotStateBox.style.color = "green";
+    else ui.robotStateBox.style.color = "red";
     if (!noElectron) {
         if (connected) {
             // On connect hide the connect popup
@@ -144,6 +149,8 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
                 clearTimeout(GTimer);
                 timer_label.innerHTML = "POST GAME";
                 GTimer = null;
+                ui.timer.style.animationPlayState = "pause";
+                ui.timer.style.color = "#ff0000";
                 return;
             }
             else if (s <= 15) {
@@ -186,6 +193,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
 // Listen and respond to posted autonomous modes
 NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes', (key, stringDictionary) => {
     var autoModes = JSON.parse(stringDictionary);
+    console.log(autoModes);
 
     var autoModesListItems = "";
     for (var autoModeKey in autoModes) {
@@ -195,6 +203,8 @@ NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes', (key, stri
     ui.autoSelectList.innerHTML = autoModesListItems;
 
     refreshAutoDragAndDrop();
+
+    sendAutoModes();
 });
 
 var selectedAutoModesKey = "/SmartDashboard/autonomous/selected_modes";
@@ -203,6 +213,19 @@ function sendAutoModes() {
     if (jsonObject == null) return;
 
     NetworkTables.putValue(selectedAutoModesKey, jsonObject);
+}
+
+function getSelectedStartPos() {
+    var left = document.getElementById("l_side"), centre = document.getElementById("c_side"), right = document.getElementById("r_side");
+    if (left.checked) return left.value;
+    else if (centre.checked) return centre.value;
+    else if (right.checked) return right.value;
+}
+
+function updateSelectedSide() {
+    var selectedSide = getSelectedStartPos();
+    console.log(selectedSide);
+    NetworkTables.putValue("/SmartDashboard/autonomous/selected_side", selectedSide);
 }
 
 function getTopAutoModes() {

@@ -80,8 +80,8 @@ function createWindow() {
         mainWindow.show();
     });
 
-    // Remove menu
-    mainWindow.setMenu(null);
+    // Hide menu
+    mainWindow.setMenuBarVisibility(false);
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows

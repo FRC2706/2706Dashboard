@@ -20,6 +20,7 @@
         <div id="robot-state">Unknown state</div>
         <button id="tuning-button">Tuning</button>
     </header>
+
     <!-- You'll need to mess around with the CSS of #camera (found in css/style.css) to get it to work.
         More explanation in that CSS rule. -->
     <div id="camera"></div>
@@ -39,43 +40,49 @@
             <text id="gyro-number" x="90" y="115">0º</text>
         </svg>
 
-        <div layout= "column" flex = "grow">
-        <p>
-          <!-- Diagram of the autonomous modes with buttons for selection -->
-          <svg id="autonomous-diagram" width = "400" height = "450">
-              <!-- Scale diagram -->
-              <rect id = "l_scale" x="100" y="250" height="50" width="100"></rect>
-              <line x1 = "200" x2="215" y1="275" y2="275"></line>
-              <rect x="215" y="250" height = "50" width="20"></rect>
-              <line x1= "235" x2="250" y1="275" y2="275"></line>
-              <rect id = "r_scale" x="250" y="250" height = "50" width = "100"></rect>
+        <div layout="column" flex="grow">
+            <p>
+                <!-- Diagram of the autonomous modes with buttons for selection -->
+                <svg id="autonomous-diagram" width="400" height="450">
+                    <!-- Scale diagram -->
+                    <rect id="l_scale" x="100" y="250" height="50" width="100"></rect>
+                    <line x1="200" x2="215" y1="275" y2="275"></line>
+                    <rect x="215" y="250" height="50" width="20"></rect>
+                    <line x1="235" x2="250" y1="275" y2="275"></line>
+                    <rect id="r_scale" x="250" y="250" height="50" width="100"></rect>
 
-              <!-- Switch Diagram -->
-              <rect x="125" y="350" height= "50" width="150"></rect>
+                    <!-- Switch Diagram -->
+                    <rect x="125" y="350" height="50" width="150"></rect>
 
-              <!-- Exchange Diagram -->
-              <rect x="175" y="425" height = "25" width = "25"></rect>
-          </svg>
-        </p>
-      </div>
+                    <!-- Exchange Diagram -->
+                    <rect x="175" y="425" height="25" width="25"></rect>
+                </svg>
+            </p>
+        </div>
 
     </article>
     <!-- The sidebar of the dashboard. Designed for smaller control elements like selection boxes and small buttons. -->
     <aside>
-	    <ol id="autoselector" style="margin-left:8px;">
-		    <li draggable="true" id = "1" class="automode">Auto Mode 1</li>
-		    <li draggable="true" id = "2" class="automode">Auto Mode 2</li>
-		    <li draggable="true" id = "3" class="automode">Auto Mode 3</li>
-		    <li draggable="true" id = "4" class="automode">Auto Mode 4</li>
-		    <li draggable="true" id = "hotel_wall_get_rekt" class="automode">Drive into hotel wall.</li>
-	    </ol>
-    </aside>
-    <div class="greybox">
         <div id="login">
             <input id="connect-address" type="text" value="localhost" disabled>
             <button id="connectButton" disabled>Connecting</button>
         </div>
-    </div>
+
+        <ol id="autoselector" style="margin-left:8px;">
+            <li draggable="true" id="1" class="automode">Auto Mode 1</li>
+            <li draggable="true" id="2" class="automode">Auto Mode 2</li>
+            <li draggable="true" id="3" class="automode">Auto Mode 3</li>
+            <li draggable="true" id="4" class="automode">Auto Mode 4</li>
+            <li draggable="true" id="hotel_wall_get_rekt" class="automode">Drive into hotel wall.</li>
+        </ol>
+
+        <form onChange = "updateSelectedSide();"> Start Position <br />
+            <input id="l_side" type="radio" name="side" value="l"/> Left Side<br />
+            <input id ="c_side" type="radio" name="side" value="c" /> Centre<br />
+            <input id="r_side" type="radio" name="side" value="r"/> Right Side<br />
+        </form>
+
+    </aside>
     <script src="tryIPC.js"></script>
     <script src="networktables/networktables.js"></script>
     <script src="ui.js"></script>
