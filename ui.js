@@ -25,7 +25,7 @@ let ui = {
     autoSelectList: document.getElementById("autoselector"),
 };
 let address = document.getElementById('connect-address'),
-    connect = document.getElementById('connectButton');
+    connect = document.getElementById('connectButton')
 
 // Sets function to be called on NetworkTables connect. Commented out because it's usually not necessary.
 // NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
@@ -85,6 +85,8 @@ function onRobotConnection(connected) {
             address.setSelectionRange(8, 12);
             // On click try to connect and disable the input and the button
             connect.onclick = () => {
+                console.log("Connecting");
+                console.log(address.value);
                 ipc.send('connect', address.value);
                 address.disabled = true;
                 connect.disabled = true;
@@ -133,8 +135,6 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
     // You shouldn't need to touch this code, but it's documented anyway in case you do.
     var s = 135, timer_label = document.getElementById("timer_subtitle");
     if (value) {
-        // Make sure timer is reset to purple when it starts
-        ui.timer.style.color = 'purple';
         // Function below adjusts time left every second
         GTimer = setInterval(function () {
             s--; // Subtract one second
@@ -149,19 +149,15 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
                 clearTimeout(GTimer);
                 timer_label.innerHTML = "POST GAME";
                 GTimer = null;
-                ui.timer.style.animationPlayState = "pause";
-                ui.timer.style.color = "#ff0000";
+                ui.timer.style.animationPlayState = "paused";
+                ui.timer.style.font.color = "#ff3030";
                 return;
             }
-            else if (s <= 15) {
-                // Flash timer if less than 15 seconds left
-                //ui.timer.style.color = (s % 2 === 0) ? '#FF3030' : 'purple';
+            else if (s <= 30) {
+                // Flash timer if less than 30 seconds left
                 ui.timer.style.animationPlayState = "running";
             }
-            else if (s <= 30) {
-                // Solid red timer when less than 30 seconds left.
-                ui.timer.style.color = '#FF3030';
-            }
+
             ui.timer.firstChild.data = m + ':' + visualS;
 
             // Autonomous period
@@ -193,7 +189,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
 // Listen and respond to posted autonomous modes
 NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes', (key, stringDictionary) => {
     var autoModes = JSON.parse(stringDictionary);
-    console.log(autoModes);
+    console.log("Received Autonomous Modes : " + autoModes);
 
     var autoModesListItems = "";
     for (var autoModeKey in autoModes) {
@@ -225,7 +221,7 @@ function getSelectedStartPos() {
 function updateSelectedSide() {
     var selectedSide = getSelectedStartPos();
     console.log(selectedSide);
-    NetworkTables.putValue("/SmartDashboard/autonomous/selected_side", selectedSide);
+    NetworkTables.putValue("/SmartDashboard/autonomous/selected_position", selectedSide);
 }
 
 function getTopAutoModes() {
