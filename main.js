@@ -38,13 +38,16 @@ function createWindow() {
     // When the user chooses the address of the bot then try to connect
     ipc.on('connect', (ev, address, port) => {
         let callback = (connected, err) => {
+            console.log("Callback - connected? : " + connected);
             mainWindow.webContents.send('connected', connected);
         };
         if (port) {
             client.start(callback, address, port);
         }
         else {
+            console.log("entering client.start() with address " + address);
             client.start(callback, address);
+            console.log("exiting client.start()");
         }
     });
     ipc.on('add', (ev, mesg) => {

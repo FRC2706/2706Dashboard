@@ -53,8 +53,8 @@ if (noElectron) {
     document.body.classList.add('login-close');
 }
 
-const CONNECTED_TEXT = "CONNECTED";
-const DISCONNECTED_TEXT = "DISCONNECTED";
+const CONNECTED_TEXT = "Connected";
+const DISCONNECTED_TEXT = "Disconnected";
 function onRobotConnection(connected) {
     var state = connected ? CONNECTED_TEXT : DISCONNECTED_TEXT;
     console.log(state);
@@ -65,6 +65,13 @@ function onRobotConnection(connected) {
         if (connected) {
             // On connect hide the connect popup
             document.body.classList.toggle('login-close', true);
+
+            console.log("Connected.") // TODO remove
+            var gyroReader = NetworkTables.getValue('/SmartDashboard/Gyro', "NOTHING");
+            console.log("GYRO : " + gyroReader);
+            console.log(NetworkTables);
+
+            NetworkTables.get
         }
         else {
             // On disconnect show the connect popup
@@ -80,17 +87,17 @@ function onRobotConnection(connected) {
             connect.disabled = false;
             connect.firstChild.data = 'Connect';
             // Add the default address and select xxxx
-            address.value = 'roborio-2706-FRC.local';
+            address.value = 'roboRIO-2706-FRC.local';
             address.focus();
             address.setSelectionRange(8, 12);
             // On click try to connect and disable the input and the button
             connect.onclick = () => {
-                console.log("Connecting");
                 console.log(address.value);
                 ipc.send('connect', address.value);
                 address.disabled = true;
                 connect.disabled = true;
                 connect.firstChild.data = 'Connecting';
+                console.log("Connecting");
             };
         }
     }
@@ -188,6 +195,7 @@ NetworkTables.addKeyListener('/SmartDashboard/time_running', (key, value) => {
 
 // Listen and respond to posted autonomous modes
 NetworkTables.addKeyListener('/SmartDashboard/autonomous/auto_modes', (key, stringDictionary) => {
+    console.log("Auto Modes Received. Decoding...");
     var autoModes = JSON.parse(stringDictionary);
     console.log("Received Autonomous Modes : " + autoModes);
 
@@ -218,10 +226,15 @@ function getSelectedStartPos() {
     else if (right.checked) return right.value;
 }
 
+const sideSelectLocation = "/SmartDashboard/autonomous/selected_position";
 function updateSelectedSide() {
     var selectedSide = getSelectedStartPos();
-    console.log(selectedSide);
-    NetworkTables.putValue("/SmartDashboard/autonomous/selected_position", selectedSide);
+    console.log("Sending selected side to " + sideSelectLocation + " : " + selectedSide);
+    NetworkTables.putValue(sideSelectLocation, selectedSide);
+
+    // TODO remove
+    var side = NetworkTables.getValue(sideSelectLocation);
+    console.log("Receiving selected side back : " + side);
 }
 
 function getTopAutoModes() {
