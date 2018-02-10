@@ -53,8 +53,8 @@ if (noElectron) {
     document.body.classList.add('login-close');
 }
 
-const CONNECTED_TEXT = "Connected";
-const DISCONNECTED_TEXT = "Disconnected";
+const CONNECTED_TEXT = "CONNECTED";
+const DISCONNECTED_TEXT = "DISCONNECTED";
 function onRobotConnection(connected) {
     var state = connected ? CONNECTED_TEXT : DISCONNECTED_TEXT;
     console.log(state);
@@ -67,11 +67,9 @@ function onRobotConnection(connected) {
             document.body.classList.toggle('login-close', true);
 
             console.log("Connected.") // TODO remove
-            var gyroReader = NetworkTables.getValue('/SmartDashboard/Gyro', "NOTHING");
+            var gyroReader = NetworkTables.getValue('/SmartDashboard/Gyro', "Received no value");
             console.log("GYRO : " + gyroReader);
             console.log(NetworkTables);
-
-            NetworkTables.get
         }
         else {
             // On disconnect show the connect popup
@@ -317,7 +315,8 @@ function onValueChanged(key, value, isNew) {
             }
         }
         else {
-            console.log('Error: Non-new variable ' + key + ' not present in tuning list!');
+            // console.log('Error: Non-new variable ' + key + ' not present in tuning list!');
+            // TODO figure out why this happens and stuff.
         }
     }
 }
