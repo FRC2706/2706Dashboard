@@ -69,7 +69,7 @@ function onRobotConnection(connected) {
             console.log("Connected.") // TODO remove
             var gyroReader = NetworkTables.getValue('/SmartDashboard/Gyro', "Received no value");
             console.log("GYRO : " + gyroReader);
-            console.log(NetworkTables);
+            console.log("NetworkTables Object : " + NetworkTables);
         }
         else {
             // On disconnect show the connect popup

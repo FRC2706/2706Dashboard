@@ -6,6 +6,7 @@ const client = new wpilib_NT.Client();
 
 // Module to control application life.
 const app = electron.app;
+console.log("App object : " + app );
 
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
